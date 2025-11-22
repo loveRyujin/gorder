@@ -9,6 +9,10 @@ import (
 type Server struct {
 }
 
+func New() *Server {
+	return &Server{}
+}
+
 func (s *Server) PostCustomerCustomerIDOrders(c *gin.Context, customerID string) {
 	fmt.Println(customerID)
 }

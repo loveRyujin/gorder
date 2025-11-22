@@ -19,7 +19,7 @@ func init() {
 func main() {
 	serviceName := viper.GetString("stock.service-name")
 	grpcserver.Run(serviceName, func(server *grpc.Server) {
-		service := &stockgrpc.Server{}
-		stockpb.RegisterStockServiceServer(server, service)
+		svc := stockgrpc.New()
+		stockpb.RegisterStockServiceServer(server, svc)
 	})
 }

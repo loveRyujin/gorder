@@ -9,6 +9,10 @@ import (
 type Server struct {
 }
 
+func New() *Server {
+	return &Server{}
+}
+
 func (G *Server) GetItems(ctx context.Context, request *stockpb.GetItemsRequest) (*stockpb.GetItemsResponse, error) {
 	//TODO implement me
 	panic("implement me")
