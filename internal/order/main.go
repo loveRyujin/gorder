@@ -6,12 +6,13 @@ import (
 	httpserver "github.com/loveRyujin/gorder/common/server/http"
 	orderhttp "github.com/loveRyujin/gorder/order/http"
 	"github.com/loveRyujin/gorder/order/ports"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 func init() {
 	if err := config.NewViperConfig(); err != nil {
-		panic(err)
+		logrus.Panic(err)
 	}
 }
 

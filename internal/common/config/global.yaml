@@ -4,3 +4,8 @@ order:
   service-name: order
   server-to-run: http
   http-addr: 127.0.0.1:8080
+
+stock:
+  service-name: stock
+  server-to-run: grpc
+  grpc-addr: 127.0.0.1:8081
