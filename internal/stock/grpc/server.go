@@ -4,13 +4,15 @@ import (
 	"context"
 
 	"github.com/loveRyujin/gorder/common/genproto/stockpb"
+	"github.com/loveRyujin/gorder/stock/app"
 )
 
 type Server struct {
+	app *app.Application
 }
 
-func New() *Server {
-	return &Server{}
+func New(app *app.Application) *Server {
+	return &Server{app: app}
 }
 
 func (G *Server) GetItems(ctx context.Context, request *stockpb.GetItemsRequest) (*stockpb.GetItemsResponse, error) {

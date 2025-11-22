@@ -4,13 +4,15 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/loveRyujin/gorder/order/app"
 )
 
 type Server struct {
+	app *app.Application
 }
 
-func New() *Server {
-	return &Server{}
+func New(app *app.Application) *Server {
+	return &Server{app: app}
 }
 
 func (s *Server) PostCustomerCustomerIDOrders(c *gin.Context, customerID string) {

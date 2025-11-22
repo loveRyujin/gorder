@@ -4,14 +4,16 @@ import (
 	"context"
 
 	"github.com/loveRyujin/gorder/common/genproto/orderpb"
+	"github.com/loveRyujin/gorder/order/app"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Server struct {
+	app *app.Application
 }
 
-func New() *Server {
-	return &Server{}
+func New(app *app.Application) *Server {
+	return &Server{app: app}
 }
 
 func (s *Server) CreateOrder(context.Context, *orderpb.CreateOrderRequest) (*emptypb.Empty, error) {
