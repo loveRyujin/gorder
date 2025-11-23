@@ -5,8 +5,7 @@ package ports
 
 // CreateOrderRequest defines model for CreateOrderRequest.
 type CreateOrderRequest struct {
-	CustomerID string             `json:"customerID"`
-	Items      []ItemWithQuantity `json:"items"`
+	Items []ItemWithQuantity `json:"items"`
 }
 
 // Error defines model for Error.

@@ -26,7 +26,7 @@ func (s *Server) PostCustomerCustomerIDOrders(c *gin.Context, customerID string)
 	}
 
 	r, err := s.app.Commands.CreateOrder.Handle(c, command.CreateOrder{
-		CustomerID: req.CustomerID,
+		CustomerID: customerID,
 		Items:      req.Items,
 	})
 	if err != nil {

@@ -113,11 +113,8 @@ components:
     CreateOrderRequest:
       type: object
       required:
-        - customerID
         - items
       properties:
-        customerID:
-          type: string
         items:
           type: array
           items:
