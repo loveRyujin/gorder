@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/loveRyujin/gorder/common/config"
+	"github.com/loveRyujin/gorder/common/discovery"
 	"github.com/loveRyujin/gorder/common/genproto/orderpb"
 	grpcserver "github.com/loveRyujin/gorder/common/server/grpc"
 	httpserver "github.com/loveRyujin/gorder/common/server/http"
@@ -31,6 +32,14 @@ func main() {
 
 	application, cleanup := service.NewApplication(ctx)
 	defer cleanup()
+
+	deregisterFunc, err := discovery.RegisterToConsul(ctx, serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer func() {
+		_ = deregisterFunc()
+	}()
 
 	go grpcserver.Run(serviceName, func(server *grpc.Server) {
 		svc := ordergrpc.New(application)
