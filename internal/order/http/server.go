@@ -30,7 +30,7 @@ func (s *Server) PostCustomerCustomerIDOrders(c *gin.Context, customerID string)
 		Items:      req.Items,
 	})
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": err})
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -47,7 +47,7 @@ func (s *Server) GetCustomerCustomerIDOrdersOrderID(c *gin.Context, customerID s
 		CustomerID: customerID,
 	})
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": err})
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
 		return
 	}
 

@@ -43,10 +43,6 @@ func (m *MemoryOrderRepository) Create(_ context.Context, order *domain.Order) (
 		Items:       order.Items,
 	}
 	m.store = append(m.store, newOrder)
-	logrus.WithFields(logrus.Fields{
-		"input_order":        order,
-		"store_after_create": m.store,
-	}).Info("memory_order_repo_create")
 
 	return newOrder, nil
 }
