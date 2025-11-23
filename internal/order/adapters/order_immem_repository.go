@@ -34,6 +34,7 @@ func NewMemoryOrderRepository() *MemoryOrderRepository {
 func (m *MemoryOrderRepository) Create(_ context.Context, order *domain.Order) (*domain.Order, error) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
+
 	newOrder := &domain.Order{
 		ID:          strconv.FormatInt(time.Now().Unix(), 10),
 		CustomerID:  order.CustomerID,
