@@ -6,6 +6,7 @@ import (
 	"github.com/loveRyujin/gorder/common/config"
 	"github.com/loveRyujin/gorder/common/discovery"
 	"github.com/loveRyujin/gorder/common/genproto/stockpb"
+	"github.com/loveRyujin/gorder/common/logging"
 	grpcserver "github.com/loveRyujin/gorder/common/server/grpc"
 	stockgrpc "github.com/loveRyujin/gorder/stock/grpc"
 	"github.com/loveRyujin/gorder/stock/service"
@@ -15,6 +16,7 @@ import (
 )
 
 func init() {
+	logging.Init()
 	if err := config.NewViperConfig(); err != nil {
 		logrus.Panic(err)
 	}
