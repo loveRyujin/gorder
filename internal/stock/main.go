@@ -48,7 +48,7 @@ func main() {
 	case "http":
 		// todo...
 	default:
-		panic("unsupported server type")
+		logrus.Panic("unsupported server type")
 	}
 
 }
