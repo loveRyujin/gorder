@@ -35,8 +35,8 @@ func NewGetCustomerOrderHandler(
 	)
 }
 
-func (g getCustomerOrderHandler) Handle(ctx context.Context, query GetCustomerOrder) (*domain.Order, error) {
-	o, err := g.repo.Get(ctx, query.OrderID, query.CustomerID)
+func (h getCustomerOrderHandler) Handle(ctx context.Context, query GetCustomerOrder) (*domain.Order, error) {
+	o, err := h.repo.Get(ctx, query.OrderID, query.CustomerID)
 	if err != nil {
 		return nil, err
 	}

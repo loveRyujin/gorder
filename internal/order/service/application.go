@@ -17,7 +17,7 @@ import (
 )
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
-	stockGRPCClient, closeStockGRPCClient, err := stockgrpc.NewClient(ctx)
+	stockGRPCClient, closeStockGRPCClient, err := stockgrpc.NewCli(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -45,6 +45,7 @@ func newApplication(_ context.Context, stockGRPC query.StockService, ch *amqp.Ch
 	return &app.Application{
 		Commands: app.Commands{
 			CreateOrder: command.NewCreateOrderHandler(orderRepo, stockGRPC, logger, metricClient, ch),
+			UpdateOrder: command.NewUpdateOrderHandler(orderRepo, logger, metricClient),
 		},
 		Queries: app.Queries{
 			GetCustomerOrder: query.NewGetCustomerOrderHandler(orderRepo, logger, metricClient),

@@ -16,7 +16,7 @@ func Init() {
 func SetFormatter(logger *logrus.Logger) {
 	logger.SetFormatter(&logrus.JSONFormatter{
 		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyLevel: "severity",
+			logrus.FieldKeyLevel: "level",
 			logrus.FieldKeyTime:  "time",
 			logrus.FieldKeyMsg:   "message",
 		},

@@ -34,8 +34,8 @@ func NewGetItemsHandler(
 	)
 }
 
-func (g getItemsHandler) Handle(ctx context.Context, query GetItems) ([]*orderpb.Item, error) {
-	items, err := g.stockRepo.GetItems(ctx, query.ItemIDs)
+func (h getItemsHandler) Handle(ctx context.Context, query GetItems) ([]*orderpb.Item, error) {
+	items, err := h.stockRepo.GetItems(ctx, query.ItemIDs)
 	if err != nil {
 		return nil, err
 	}

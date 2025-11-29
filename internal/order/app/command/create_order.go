@@ -55,12 +55,12 @@ func NewCreateOrderHandler(
 	)
 }
 
-func (c createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*CreateOrderResult, error) {
-	validateItems, err := c.validate(ctx, cmd.Items)
+func (h createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*CreateOrderResult, error) {
+	validateItems, err := h.validate(ctx, cmd.Items)
 	if err != nil {
 		return nil, err
 	}
-	o, err := c.repo.Create(ctx, &domain.Order{
+	o, err := h.repo.Create(ctx, &domain.Order{
 		CustomerID: cmd.CustomerID,
 		Items:      validateItems,
 	})
@@ -68,7 +68,7 @@ func (c createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*Creat
 		return nil, err
 	}
 
-	q, err := c.channel.QueueDeclare(broker.EventOrderCreated, true, false, false, false, nil)
+	q, err := h.channel.QueueDeclare(broker.EventOrderCreated, true, false, false, false, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*Creat
 	if err != nil {
 		return nil, err
 	}
-	err = c.channel.PublishWithContext(ctx, "", q.Name, false, false, amqp.Publishing{
+	err = h.channel.PublishWithContext(ctx, "", q.Name, false, false, amqp.Publishing{
 		ContentType:  "application/json",
 		DeliveryMode: amqp.Persistent,
 		Body:         marshalledOrder,
@@ -89,13 +89,13 @@ func (c createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*Creat
 	return &CreateOrderResult{OrderID: o.ID}, nil
 }
 
-func (c createOrderHandler) validate(ctx context.Context, items []*orderpb.ItemWithQuantity) ([]*orderpb.Item, error) {
+func (h createOrderHandler) validate(ctx context.Context, items []*orderpb.ItemWithQuantity) ([]*orderpb.Item, error) {
 	if len(items) == 0 {
 		return nil, errors.New("must have at least one item")
 	}
 
 	items = packItems(items)
-	resp, err := c.stockGRPC.CheckIfItemsInStock(ctx, items)
+	resp, err := h.stockGRPC.CheckIfItemsInStock(ctx, items)
 	if err != nil {
 		return nil, err
 	}

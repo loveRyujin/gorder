@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
+
 	"github.com/loveRyujin/gorder/common/broker"
 	"github.com/loveRyujin/gorder/common/config"
 	"github.com/loveRyujin/gorder/common/logging"
 	httpserver "github.com/loveRyujin/gorder/common/server/http"
 	paymenthttp "github.com/loveRyujin/gorder/payment/http"
 	"github.com/loveRyujin/gorder/payment/infrastructure/consumer"
+	"github.com/loveRyujin/gorder/payment/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -35,7 +38,13 @@ func main() {
 		_ = closeCh()
 	}()
 
-	go consumer.NewConsumer(ch).Listen()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	application, cleanup := service.NewApplication(ctx)
+	defer cleanup()
+
+	go consumer.NewConsumer(application, ch).Listen()
 
 	switch serverType {
 	case "http":
