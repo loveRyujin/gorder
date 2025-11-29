@@ -23,16 +23,18 @@ func (c *Consumer) Listen(ch *amqp.Channel) {
 		logrus.Warnf("fail to consume: queue=%s, err=%v", q.Name, err)
 	}
 
-	forever := make(chan struct{})
 	go func() {
 		for msg := range msgs {
-			c.handleMessage(msg, q, ch)
+			c.handleMessage(msg, q)
 		}
 	}()
-	<-forever
+
+	select {}
 }
 
-func (c *Consumer) handleMessage(msg amqp.Delivery, q amqp.Queue, ch *amqp.Channel) {
+func (c *Consumer) handleMessage(msg amqp.Delivery, q amqp.Queue) {
 	logrus.Infof("Payment receive a message from %s, msg=%v", q.Name, string(msg.Body))
-	_ = msg.Ack(false)
+	if err := msg.Ack(false); err != nil {
+		logrus.Warnf("Failed to ack message, err=%s", err.Error())
+	}
 }
