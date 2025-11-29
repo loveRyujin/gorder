@@ -6,19 +6,23 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Consumer struct{}
-
-func NewConsumer() *Consumer {
-	return &Consumer{}
+type Consumer struct {
+	ch *amqp.Channel
 }
 
-func (c *Consumer) Listen(ch *amqp.Channel) {
-	q, err := ch.QueueDeclare(broker.EventOrderCreated, true, false, false, false, nil)
+func NewConsumer(ch *amqp.Channel) *Consumer {
+	return &Consumer{
+		ch: ch,
+	}
+}
+
+func (c *Consumer) Listen() {
+	q, err := c.ch.QueueDeclare(broker.EventOrderCreated, true, false, false, false, nil)
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
-	msgs, err := ch.Consume(q.Name, "", false, false, false, false, nil)
+	msgs, err := c.ch.Consume(q.Name, "", false, false, false, false, nil)
 	if err != nil {
 		logrus.Warnf("fail to consume: queue=%s, err=%v", q.Name, err)
 	}

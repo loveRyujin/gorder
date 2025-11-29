@@ -35,7 +35,7 @@ func main() {
 		_ = closeCh()
 	}()
 
-	go consumer.NewConsumer().Listen(ch)
+	go consumer.NewConsumer(ch).Listen()
 
 	switch serverType {
 	case "http":
