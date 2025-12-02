@@ -11,6 +11,7 @@ import (
 func Init() {
 	SetFormatter(logrus.StandardLogger())
 	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetOutput(os.Stdout)
 }
 
 func SetFormatter(logger *logrus.Logger) {
@@ -24,6 +25,7 @@ func SetFormatter(logger *logrus.Logger) {
 	if isLocal, _ := strconv.ParseBool(os.Getenv("LOCAL_ENV")); isLocal {
 		logger.SetFormatter(&prefixed.TextFormatter{
 			ForceFormatting: true,
+			ForceColors:     true,
 		})
 	}
 }
