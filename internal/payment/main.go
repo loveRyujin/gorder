@@ -48,7 +48,7 @@ func main() {
 
 	switch serverType {
 	case "http":
-		svc := paymenthttp.New()
+		svc := paymenthttp.New(ch)
 		httpserver.Run(serviceName, svc.RegisterRoutes)
 	case "grpc":
 		// todo...

@@ -13,6 +13,7 @@ func NewViperConfig() error {
 	viper.EnvKeyReplacer(strings.NewReplacer("_", "-"))
 	viper.AutomaticEnv()
 	_ = viper.BindEnv("stripe-key", "STRIPE_KEY")
+	_ = viper.BindEnv("stripe-endpoint-secret", "STRIPE_ENDPOINT_SECRET")
 
 	return viper.ReadInConfig()
 }
