@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	orderGRPCClient, closeOrderGRPCClient, err := ordergrpc.NewCli(ctx)
 	if err != nil {
 		panic(err)
@@ -27,10 +27,10 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	}
 }
 
-func newApplication(_ context.Context, orderGRPC command.OrderService, processor domain.Processor) app.Application {
+func newApplication(_ context.Context, orderGRPC command.OrderService, processor domain.Processor) *app.Application {
 	logger := logrus.NewEntry(logrus.StandardLogger())
 	metricClient := &metrics.TodoMetrics{}
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CreatePayment: command.NewCreatePaymentHandler(processor, orderGRPC, logger, metricClient),
 		},

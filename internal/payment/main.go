@@ -44,7 +44,7 @@ func main() {
 	application, cleanup := service.NewApplication(ctx)
 	defer cleanup()
 
-	go consumer.NewConsumer(application, ch).Listen()
+	go consumer.NewConsumer(*application, ch).Listen()
 
 	switch serverType {
 	case "http":

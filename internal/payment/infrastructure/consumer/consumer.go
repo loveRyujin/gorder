@@ -32,7 +32,7 @@ func (c *Consumer) Listen() {
 
 	msgs, err := c.ch.Consume(q.Name, "", false, false, false, false, nil)
 	if err != nil {
-		logrus.Warnf("fail to consume: queue=%s, err=%v", q.Name, err)
+		logrus.Warnf("[Payment] fail to consume: queue=%s, err=%s", q.Name, err.Error())
 	}
 
 	go func() {
@@ -49,13 +49,13 @@ func (c *Consumer) handleMessage(msg amqp.Delivery, q amqp.Queue) {
 
 	o := &orderpb.Order{}
 	if err := json.Unmarshal(msg.Body, o); err != nil {
-		logrus.Infof("failed to unmarshall msg to order, err=%v", err)
+		logrus.Infof("failed to unmarshall msg to order, err=%s", err.Error())
 		_ = msg.Nack(false, false)
 		return
 	}
 	if _, err := c.app.Commands.CreatePayment.Handle(context.TODO(), command.CreatePayment{Order: o}); err != nil {
 		// TODO: retry
-		logrus.Infof("failed to create order, err=%v", err)
+		logrus.Infof("failed to create order, err=%s", err.Error())
 		_ = msg.Nack(false, false)
 		return
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/loveRyujin/gorder/common/genproto/orderpb"
+	"github.com/stripe/stripe-go/v79"
 )
 
 type Order struct {
@@ -48,4 +49,8 @@ func (o *Order) ToProto() *orderpb.Order {
 		Items:       o.Items,
 		PaymentLink: o.PaymentLink,
 	}
+}
+
+func (o *Order) IsPaid() bool {
+	return o.Status == string(stripe.CheckoutSessionPaymentStatusPaid)
 }
