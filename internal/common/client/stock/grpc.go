@@ -2,7 +2,10 @@ package stock
 
 import (
 	"context"
+	"errors"
+	"time"
 
+	clipkg "github.com/loveRyujin/gorder/common/client/pkg"
 	"github.com/loveRyujin/gorder/common/discovery"
 	"github.com/loveRyujin/gorder/common/genproto/stockpb"
 	"github.com/sirupsen/logrus"
@@ -12,6 +15,9 @@ import (
 )
 
 func NewCli(ctx context.Context) (client stockpb.StockServiceClient, close func() error, err error) {
+	if !waitForStock(viper.GetDuration("grpc-dial-timeout") * time.Second) {
+		return nil, func() error { return nil }, errors.New("grpc service is not available")
+	}
 	grpcAddr, err := discovery.GetServiceAddr(ctx, viper.GetString("stock.service-name"))
 	if err != nil {
 		return nil, func() error { return nil }, err
@@ -36,4 +42,9 @@ func grpcDialOpts(_ string) ([]grpc.DialOption, error) {
 	return []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}, nil
+}
+
+func waitForStock(timeout time.Duration) bool {
+	logrus.Infof("waiting for stock grpc client, timeout: %v seconds", timeout.Seconds())
+	return clipkg.WaitFor(viper.GetString("stock.grpc-addr"), timeout)
 }
