@@ -10,6 +10,7 @@ import (
 	"github.com/loveRyujin/gorder/common/genproto/stockpb"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -41,6 +42,7 @@ func NewCli(ctx context.Context) (client stockpb.StockServiceClient, close func(
 func grpcDialOpts(_ string) ([]grpc.DialOption, error) {
 	return []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithStatsHandler(otelgrpc.NewServerHandler()),
 	}, nil
 }
 

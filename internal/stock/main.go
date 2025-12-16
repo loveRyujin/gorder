@@ -8,6 +8,7 @@ import (
 	"github.com/loveRyujin/gorder/common/genproto/stockpb"
 	"github.com/loveRyujin/gorder/common/logging"
 	grpcserver "github.com/loveRyujin/gorder/common/server/grpc"
+	"github.com/loveRyujin/gorder/common/tracing"
 	stockgrpc "github.com/loveRyujin/gorder/stock/grpc"
 	"github.com/loveRyujin/gorder/stock/service"
 	"github.com/sirupsen/logrus"
@@ -28,6 +29,12 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	shutdown, err := tracing.InitJaegerProvider(viper.GetString("jaeger.url"), serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer shutdown(ctx)
 
 	application := service.NewApplication(ctx)
 

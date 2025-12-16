@@ -11,6 +11,7 @@ import (
 	"github.com/loveRyujin/gorder/common/logging"
 	grpcserver "github.com/loveRyujin/gorder/common/server/grpc"
 	httpserver "github.com/loveRyujin/gorder/common/server/http"
+	"github.com/loveRyujin/gorder/common/tracing"
 	ordergrpc "github.com/loveRyujin/gorder/order/grpc"
 	orderhttp "github.com/loveRyujin/gorder/order/http"
 	"github.com/loveRyujin/gorder/order/infrastructure/consumer"
@@ -33,6 +34,12 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	shutdown, err := tracing.InitJaegerProvider(viper.GetString("jaeger.url"), serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer shutdown(ctx)
 
 	application, cleanup := service.NewApplication(ctx)
 	defer cleanup()
